@@ -1,0 +1,68 @@
+package com.movieplan.entity;
+
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "payments")
+public class Payment {
+
+	@Id
+	@GeneratedValue
+	private int id;
+	
+	@OneToOne
+	private User user;
+	
+	@OneToMany(mappedBy = "payment")
+	private List<Ticket> tickets;
+	
+	
+	private float amount;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Ticket> getTickets() {
+		return tickets;
+	}
+
+	public void addTicket(Ticket ticket) {
+		if(null!=ticket) {
+			this.tickets.add(ticket);
+		}
+	}
+	public void removeTicket(Ticket ticket) {
+		if(this.tickets.contains(ticket)) {
+			this.tickets.remove(ticket);
+		}
+	}
+
+	public float getAmount() {
+		return amount;
+	}
+
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
+	
+}
