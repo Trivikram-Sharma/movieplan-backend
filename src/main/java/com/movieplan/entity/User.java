@@ -20,6 +20,9 @@ public class User {
 
 	@ColumnDefault(value = "inactive")
 	private String status;
+	
+	//Constructors
+	public User() {}
 
 	// Getters and setters
 	public String getUserName() {

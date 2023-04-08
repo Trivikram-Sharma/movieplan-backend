@@ -56,4 +56,43 @@ public class UserService {
 			return null;
 		}
 	}
+	
+	public boolean signUp(String userName, String password) {
+		Optional<User> userOptional = userRepository.findById(userName);
+		if(userOptional.isPresent()) {
+			logger.error("User {} is already present and registered! Please try to login/change the userName!", userName);
+			return false;
+		}
+		else {
+			User user = new User();
+			user.setStatus("inactive");
+			user.setUserName(userName);
+			user.setPassword(password);
+			return userRepository.save(user)!=null;
+		}
+	}
+	
+	public boolean changePassword(String userName, String oldPassword, String newPassword) {
+		Optional<User> userOptional = userRepository.findById(userName);
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			if(user.getPassword().equals(oldPassword)) {
+				user.setPassword(newPassword);
+				return userRepository.save(user)!=null;
+			}
+			else {
+				logger.error("The existing password provided is incorrect! Please check the existing password and try again!");
+				return false;
+			}
+		}
+		else {
+			logger.warn("The {} user is not registered!",userName);
+			return false;
+		}
+	}
+	
+	public User getUserWithId(String userName) {
+		return userRepository.findById(userName).orElse(null);
+	}
+	
 }
