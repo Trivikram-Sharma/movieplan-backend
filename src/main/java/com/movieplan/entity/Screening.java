@@ -2,13 +2,12 @@ package com.movieplan.entity;
 
 import java.time.LocalDate;
 
-import org.hibernate.annotations.ColumnDefault;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Screening {
@@ -27,7 +26,7 @@ public class Screening {
 	
 	private LocalDate date;
 	
-	@ColumnDefault(value = "Not started")
+	@ColumnDefault(value = "'Not started'")
 	private String status;
 
 	//Constructors

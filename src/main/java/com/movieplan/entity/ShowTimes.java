@@ -3,12 +3,12 @@ package com.movieplan.entity;
 import java.time.LocalTime;
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "show_times")
@@ -27,7 +27,7 @@ public class ShowTimes {
 	@Column(name = "end_time")
 	private LocalTime endTime;
 
-	@OneToMany(mappedBy = "showTimes")
+	@OneToMany(mappedBy = "showTime")
 	private List<Screening> screenings;
 
 	// Constructors

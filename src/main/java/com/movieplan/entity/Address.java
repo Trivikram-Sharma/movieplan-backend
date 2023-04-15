@@ -1,10 +1,10 @@
 package com.movieplan.entity;
 
-import org.hibernate.annotations.ColumnDefault;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 public class Address {
@@ -18,11 +18,11 @@ public class Address {
 	@Column(nullable = false)
 	private String city;
 	
-	@ColumnDefault(value = "Andhra Pradesh")
+	@ColumnDefault(value = "'Andhra Pradesh'")
 	private String state;
 	
 	@Column(nullable = false)
-	@ColumnDefault(value = "INDIA")
+	@ColumnDefault(value = "'INDIA'")
 	private String country;
 	
 	private String pincode;
