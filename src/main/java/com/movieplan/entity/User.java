@@ -21,6 +21,13 @@ public class User {
 	@ColumnDefault(value = "'inactive'")
 	private String status;
 	
+	@Column(name = "Full_Name")
+	private String fullName;
+	
+	@Column(name = "email")
+	private String email;
+	
+
 	//Constructors
 	public User() {}
 
@@ -47,6 +54,22 @@ public class User {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public String getFullName() {
+		return fullName;
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }

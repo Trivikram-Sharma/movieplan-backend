@@ -46,7 +46,7 @@ public class UserController {
 	//POST APIs
 	@PostMapping("/signUp")
 	public boolean signUp(@RequestBody User user) {
-		return userService.signUp(user.getUserName(), user.getPassword());
+		return userService.signUp(user.getUserName(), user.getPassword(), user.getFullName(), user.getEmail());
 	}
 	
 	@PostMapping("/signIn")

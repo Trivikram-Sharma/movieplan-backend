@@ -57,7 +57,7 @@ public class UserService {
 		}
 	}
 	
-	public boolean signUp(String userName, String password) {
+	public boolean signUp(String userName, String password, String fullName, String email) {
 		Optional<User> userOptional = userRepository.findById(userName);
 		if(userOptional.isPresent()) {
 			logger.error("User {} is already present and registered! Please try to login/change the userName!", userName);
@@ -68,6 +68,8 @@ public class UserService {
 			user.setStatus("inactive");
 			user.setUserName(userName);
 			user.setPassword(password);
+			user.setFullName(fullName);
+			user.setEmail(email);
 			return userRepository.save(user)!=null;
 		}
 	}
