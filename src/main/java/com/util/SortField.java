@@ -1,0 +1,22 @@
+package com.util;
+
+public enum SortField {
+	GENRE,
+	TITLE,
+	PRICE,
+	LANGUAGE,
+	RELEASEDATE,
+	USER,
+	AMOUNT,
+	DATE,
+	STATUS,
+	SHOWNAME,
+	STARTTIME,
+	ENDTIME,
+	NAME,
+	SCREENS,
+	CITY,
+	STATE,
+	COUNTRY,
+	PINCODE
+}

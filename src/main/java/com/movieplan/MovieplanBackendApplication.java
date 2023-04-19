@@ -1,10 +1,12 @@
 package com.movieplan;
 
-import java.util.Collections;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -19,6 +21,8 @@ public class MovieplanBackendApplication {
 		SpringApplication.run(MovieplanBackendApplication.class, args);
 	}
 	
+//	@Value("${allowed.origin}")
+//	private String allowedOrigin;
 	
 	
 	@Bean
@@ -26,6 +30,17 @@ public class MovieplanBackendApplication {
 	      return new Docket(DocumentationType.SWAGGER_2).select()
 	         .apis(RequestHandlerSelectors.basePackage("com.movieplan")).build();
 	   }
+	
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			public void addCorsMapping(CorsRegistry registry) {
+				registry.addMapping("/**")
+				.allowedOrigins("http://localhost:4200");
+			}
+		};
+	}
+	
 	
 //	@Bean
 //	public Docket swaggerConfiguration() {

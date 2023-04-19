@@ -1,0 +1,22 @@
+package com.util;
+
+public enum FilterField {
+	CITY,
+	STATE,
+	COUNTRY,
+	PINCODE,
+	GENRE,
+	TITLE,
+	PRICE_RANGE,
+	LANGUAGE,
+	RELEASEDATE,
+	STATUS,
+	AMOUNT,
+	NAME,
+	DATE,
+	SCREENS,
+	SHOWNAME,
+	STARTTIME,
+	ENDTIME,
+	USER
+}

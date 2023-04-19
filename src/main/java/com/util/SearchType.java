@@ -6,5 +6,6 @@ public enum SearchType {
 	PAYMENT,
 	SHOWTIME,
 	THEATRE,
-	TICKET
+	TICKET,
+	ADDRESS
 }
