@@ -8,7 +8,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "admin_table")
 public class Admin {
 
 	@Id

@@ -31,15 +31,15 @@ public class MovieplanBackendApplication {
 	         .apis(RequestHandlerSelectors.basePackage("com.movieplan")).build();
 	   }
 	
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			public void addCorsMapping(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:4200");
-			}
-		};
-	}
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//		return new WebMvcConfigurer() {
+//			public void addCorsMapping(CorsRegistry registry) {
+//				registry.addMapping("/**")
+//				.allowedOrigins("http://localhost:4200");
+//			}
+//		};
+//	}
 	
 	
 //	@Bean

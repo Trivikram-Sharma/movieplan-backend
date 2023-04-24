@@ -17,23 +17,23 @@ public class AdminController {
 	private AdminService adservice;
 
 	@PostMapping("/login")
-	public String adminLogin(@RequestBody Admin admin) {
+	public Admin adminLogin(@RequestBody Admin admin) {
 		Admin a = adservice.signIn(admin.getAdminUserName(), admin.getAdminPassword());
 		if (null != a && a.getStatus().equals("Active")) {
-			return "Hi " + a.getAdminUserName() + "! Welcome! Your Login is Successful!";
+			return a;
 		} else {
-			return "Username or Password is incorrect. Please try again.";
+			return null;
 		}
 	}
 
 	@PostMapping("/logout")
-	public String adminLogOut(@RequestBody Admin admin) {
+	public Admin adminLogOut(@RequestBody Admin admin) {
 		Admin a = adservice.signOut(admin.getAdminUserName(),admin.getAdminPassword());
 		if(null!=a && a.getStatus().equals("inactive")) {
-			return "Logged Out Successfully!";
+			return a;
 		}
 		else {
-			return "Logout Failed! Please try again after sometime!";
+			return null;
 		}
 	}
 
