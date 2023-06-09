@@ -1,6 +1,7 @@
 package com.movieplan.entity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,12 +16,12 @@ public class Filter {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	@ManyToMany
 	private List<Search> searches;
-	
+
 	private String filterField;
-	
+
 	private String filterValues;
 
 	public int getId() {
@@ -39,6 +40,12 @@ public class Filter {
 		this.searches = searches;
 	}
 
+	public void addSearches(Search search) {
+		if (null != search) {
+			this.searches.add(search);
+		}
+	}
+
 	public String getFilterField() {
 		return filterField;
 	}
@@ -54,8 +61,18 @@ public class Filter {
 	public void setFilterValues(String filterValues) {
 		this.filterValues = filterValues;
 	}
+	public void addFilterValues(List<String> filterValues) {
+		if(filterValues!=null) {
+			this.filterValues.concat(
+					filterValues.stream().collect(Collectors.joining(","))
+					);
+		}
+	}
 	
-	
-	
-	
+	public void addFilterValue(String filterValue) {
+		if(!filterValue.isEmpty()) {
+			this.filterValues.concat("," + filterValue);
+		}
+	}
+
 }
