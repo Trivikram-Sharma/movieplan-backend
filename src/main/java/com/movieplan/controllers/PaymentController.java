@@ -44,7 +44,7 @@ public class PaymentController {
 	}
 	
 	//PATCH APIs
-	@PatchMapping("/{id}/update/user")
+	@PatchMapping("/update/user/{id}")
 	public boolean updatePaymentUser(@PathVariable("id") String id,@RequestParam(required = true) String userId) {
 		Payment p = pservice.getPaymentById(Integer.parseInt(id));
 		if(null!=p) {

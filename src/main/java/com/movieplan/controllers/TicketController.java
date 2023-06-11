@@ -42,19 +42,19 @@ public class TicketController {
 		return tservice.getTicketById(Integer.parseInt(id));
 	}
 	
-	@GetMapping
+	@GetMapping("/get/paymentid")
 	public List<Ticket> getTicketsByPaymentId(@RequestParam(required = true) String paymentId){
 		return tservice.getTicketsByPaymentId(paymentId);
 	}
 	
 	//PATCH APIs
-	@PatchMapping("/{id}/update/user")
+	@PatchMapping("/update/user/{id}")
 	public boolean updateTicketUser(@PathVariable("id") String id, @RequestParam(required = true) String userId) {
 		Ticket t = tservice.getTicketById(Integer.parseInt(id));
 			return tservice.updateTicketUser(t, userId);
 	}
 	
-	@PatchMapping("/{id}/update/movie")
+	@PatchMapping("/update/movie/{id}")
 	public boolean updateTicketMovie(@PathVariable("id") String id, @RequestParam(required = true) String movieId) {
 		Ticket t = tservice.getTicketById(Integer.parseInt(id));
 		return tservice.updateTicketMovie(t, movieId);

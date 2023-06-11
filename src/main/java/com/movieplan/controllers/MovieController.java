@@ -100,7 +100,7 @@ public class MovieController {
 
 //UPDATE APIs	
 
-	@PatchMapping("{movieId}/update/title")
+	@PatchMapping("/update/title/{movieId}")
 	public boolean updateMovieTitle(@PathVariable("movieId") String movieId,
 			@RequestParam(required = true) String title) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
@@ -112,7 +112,7 @@ public class MovieController {
 		}
 	}
 
-	@PatchMapping("{movieId}/update/price")
+	@PatchMapping("/update/price/{movieId}")
 	public boolean updateMoviePrice(@PathVariable("movieId") String movieId,
 			@RequestParam(required = true) String price) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
@@ -124,7 +124,7 @@ public class MovieController {
 		}
 	}
 
-	@PatchMapping("{movieId}/update/language")
+	@PatchMapping("/update/language/{movieId}")
 	public boolean updateMovieLanguage(@PathVariable("movieId") String movieId,
 			@RequestParam(required = true) String language) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
@@ -136,7 +136,7 @@ public class MovieController {
 		}
 	}
 
-	@PatchMapping("{movieId}/update/description")
+	@PatchMapping("/update/description/{movieId}")
 	public boolean updateMovieDescription(@PathVariable("movieId") String movieId,
 			@RequestParam(required = true) String description) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
@@ -149,7 +149,7 @@ public class MovieController {
 
 	}
 
-	@PatchMapping("{movieId}/update/enable")
+	@PatchMapping("/update/enable/{movieId}")
 	public boolean enableMovie(@PathVariable("movieId") String movieId) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
 		if (movie.isPresent()) {
@@ -160,7 +160,7 @@ public class MovieController {
 
 	}
 
-	@PatchMapping("{movieId}/update/disable")
+	@PatchMapping("/update/disable/{movieId}")
 	public boolean disableMovie(@PathVariable("movieId") String movieId) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
 		if (movie.isPresent()) {
@@ -171,7 +171,7 @@ public class MovieController {
 
 	}
 
-	@PatchMapping("{movieId}/update/addGenre")
+	@PatchMapping("/update/addGenre/{movieId}")
 	public boolean updateMovieWithGenre(@PathVariable("movieId") String movieId,
 			@RequestParam(required = true) String genre) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
@@ -183,7 +183,7 @@ public class MovieController {
 
 	}
 
-	@PostMapping("{movieId}/update/addGenres")
+	@PostMapping("/update/addGenres/{movieId}")
 	public boolean updateMovieWithGenres(@PathVariable("movieId") String movieId,
 			@RequestBody(required = true) List<String> genres) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);

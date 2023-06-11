@@ -88,7 +88,7 @@ public class ScreeningController {
 	
 	//PATCH APIs
 	
-	@PatchMapping("{screeningId}/update/theatre")
+	@PatchMapping("/update/theatre/{screeningId}")
 	public boolean updateScreeningTheatre(@PathVariable("screeningId") String screeningId, @RequestParam(required = true) String theatreId) {
 		Theatre theatre = tservice.findTheatreById(Integer.parseInt(theatreId));
 		Screening s = sservice.getScreeningWithId(screeningId);
@@ -99,7 +99,7 @@ public class ScreeningController {
 			return false;
 		}
 	}
-	@PatchMapping("{screeningId}/update/movie")
+	@PatchMapping("/update/movie/{screeningId}")
 	public boolean updateScreeningMovie(@PathVariable("screeningId") String screeningId, @RequestParam(required = true) String movieId) {
 		Optional<Movie> movie = mservice.getMovieWithId(movieId);
 		Screening s = sservice.getScreeningWithId(screeningId);
@@ -108,7 +108,7 @@ public class ScreeningController {
 		}
 		else {return false;}
 	}
-	@PatchMapping("{screeningId}/update/showtime")
+	@PatchMapping("/update/showtime/{screeningId}")
 	public boolean updateScreeningShowTime(@PathVariable("screeningId") String screeningId, @RequestParam(required = true) String showName) {
 		ShowTimes st = stservice.getShowTimeByName(showName);
 		Screening s = sservice.getScreeningWithId(screeningId);
@@ -117,7 +117,7 @@ public class ScreeningController {
 		}
 		else {return false;}
 	}
-	@PatchMapping("{screeningId}/update/status")
+	@PatchMapping("/update/status/{screeningId}")
 	public boolean updateScreeningStatus(@PathVariable("screeningId") String screeningId, @RequestParam(required = true) String status) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {
@@ -127,7 +127,7 @@ public class ScreeningController {
 			return false;
 		}
 	}
-	@PatchMapping("/{screeningId}/update/date")
+	@PatchMapping("/update/date/{screeningId}")
 	public boolean updateScreeningDate(@PathVariable("screeningId") String screeningId, @RequestParam(required = true) String date1) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {
@@ -138,7 +138,7 @@ public class ScreeningController {
 	
 	// DELETE APIs
 	
-	@DeleteMapping("/{screeningId}/delete/theatre")
+	@DeleteMapping("/delete/theatre/{screeningId}")
 	public boolean deleteScreeningTheatre(@PathVariable("screeningId") String screeningId) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {
@@ -148,7 +148,7 @@ public class ScreeningController {
 			return false;
 		}
 	}
-	@DeleteMapping("/{screeningId}/delete/movie")
+	@DeleteMapping("/delete/movie/{screeningId}")
 	public boolean deleteScreeningMovie(@PathVariable("screeningId") String screeningId) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {
@@ -158,7 +158,7 @@ public class ScreeningController {
 			return false;
 		}
 	}
-	@DeleteMapping("/{screeningId}/delete/showtime")
+	@DeleteMapping("/delete/showtime/{screeningId}")
 	public boolean deleteScreeningShowTime(@PathVariable("screeningId") String screeningId) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {
@@ -168,7 +168,7 @@ public class ScreeningController {
 			return false;
 		}
 	}
-	@DeleteMapping("/{screeningId}/delete/date")
+	@DeleteMapping("/delete/date/{screeningId}")
 	public boolean deleteScreeningDate(@PathVariable("screeningId") String screeningId) {
 		Screening s = sservice.getScreeningWithId(screeningId);
 		if(null!=s) {

@@ -58,22 +58,22 @@ public class TheatreController {
 	
 	//PATCH APIs
 	
-	@PatchMapping("/{theatreId}/update/name")
+	@PatchMapping("/update/name/{theatreId}")
 	public boolean updateTheatreName(@PathVariable("theatreId") String theatreId, @RequestParam(required = true) String name) {
 		return thservice.updateTheatreName(name, thservice.findTheatreById(Integer.parseInt(theatreId)));
 	}
-	@PatchMapping("/{theatreId}/update/screen")
+	@PatchMapping("/update/screen/{theatreId}")
 	public boolean updateTheatreScreens(@PathVariable("theatreId") String theatreId, @RequestParam(required = true) String screen) {
 		return thservice.updateScreens(thservice.findTheatreById(Integer.parseInt(theatreId)), Integer.parseInt(screen));
 	}
-	@PatchMapping("/{theatreId}/update/address")
+	@PatchMapping("/update/address/{theatreId}")
 	public boolean updateTheatreAddress(@PathVariable("theatreId") String theatreId, @RequestBody Address address) {
 		return thservice.updateTheatreAddress(thservice.findTheatreById(Integer.parseInt(theatreId)), address);
 	}
 	
 	// DELETE APIs
 	
-	@DeleteMapping("/{theatreId}/delete/screens")
+	@DeleteMapping("/delete/screens/{theatreId}")
 	public boolean deleteAllTheatreScreens(@PathVariable("theatreId") String theatreId) {
 		return thservice.removeTheatreScreens(thservice.findTheatreById(Integer.parseInt(theatreId)));
 	}
