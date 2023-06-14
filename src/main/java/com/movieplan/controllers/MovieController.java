@@ -47,6 +47,21 @@ public class MovieController {
 				&& mservice.updateMovieGenres(movie.getGenres().subList(1, movie.getGenres().size() - 1), movie);
 	}
 
+	//GET APIs
+	
+	@GetMapping("/getNewId")
+	public String getNewId(@RequestParam(required = true) String title,
+			@RequestParam(required = true) String description,
+			@RequestParam(required = true) String language,
+			@RequestParam(required = true) String releasedate) {
+		Movie m = new Movie();
+		m.setTitle(title);
+		m.setLanguage(language);
+		m.setDescription(description);
+		m.setReleaseDate(LocalDate.parse(releasedate, DateTimeFormatter.ISO_LOCAL_DATE));
+		return mservice.getNewIdFromPresentMovies(
+				mservice.getParticularMovies(title, language, description, releasedate), m);
+	}
 	@GetMapping("/search")
 	public List<Movie> getAllMovies() {
 		return mservice.getAllMovies();

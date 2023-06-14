@@ -84,7 +84,7 @@ public class MovieService {
 
 	// Helper method to create new id for a movie to be added, in case multiple
 	// movies are present with same title, language, description, release date
-	private String getNewIdFromPresentMovies(List<Movie> presentMovies, Movie currentMovie) {
+	public String getNewIdFromPresentMovies(List<Movie> presentMovies, Movie currentMovie) {
 		if (null == presentMovies || presentMovies.isEmpty()) {
 			return currentMovie.getTitle().replace(" ", "_") + "_" + currentMovie.getLanguage() + "_"
 					+ currentMovie.getReleaseDate().format(DateTimeFormatter.ISO_LOCAL_DATE);
@@ -122,6 +122,12 @@ public class MovieService {
 	}
 
 	/************** READ METHODS *****************/
+	
+	//Get Particular Movies List with same tile, language, description, release Date
+	public List<Movie> getParticularMovies(String title, String language, String description, String releaseDate){
+		return movieRepo.getParticularMovie(title, language, description, 
+				LocalDate.parse(releaseDate, DateTimeFormatter.ISO_LOCAL_DATE));
+	}
 	
 	//Get Movie By Id
 	public Optional<Movie> getMovieWithId(String id) {
