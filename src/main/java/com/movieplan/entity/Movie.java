@@ -50,6 +50,8 @@ public class Movie {
 
 	}
 
+	
+
 	public Movie(String id, String title, int price, String language, String description, LocalDate releaseDate) {
 		this.id = id;
 		this.title = title;
@@ -137,6 +139,10 @@ public class Movie {
 	
 	public LocalDate getReleaseDate() {
 		return this.releaseDate;
+	}
+	
+	public void setReleaseDate(LocalDate releaseDate) {
+		this.releaseDate = releaseDate;
 	}
 	
 }
