@@ -36,6 +36,8 @@ public class Movie {
 
 	@ColumnDefault(value = "'enabled'")
 	private String status;
+	
+	private String filename;
 
 	@ManyToMany
 	private List<Genre> genres;
