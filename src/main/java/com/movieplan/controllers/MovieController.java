@@ -62,6 +62,18 @@ public class MovieController {
 		return mservice.getNewIdFromPresentMovies(
 				mservice.getParticularMovies(title, language, description, releasedate), m);
 	}
+	
+	@GetMapping("/id")
+	public Movie getMovieWithId(@RequestParam(required = true) String id) {
+		Optional<Movie> movie = mservice.getMovieWithId(id);
+		if(movie.isPresent()) {
+			return movie.get();
+		}
+		else {
+			return null;
+		}
+	}
+	
 	@GetMapping("/search")
 	public List<Movie> getAllMovies() {
 		return mservice.getAllMovies();
@@ -184,6 +196,18 @@ public class MovieController {
 			return false;
 		}
 
+	}
+	
+	@PatchMapping("/update/releaseDate/{movieId}")
+	public boolean updateMovieReleaseDate(@PathVariable("movieId") String movieId,
+			@RequestParam(required = true) String releaseDate) {
+		Optional<Movie> movie = mservice.getMovieWithId(movieId);
+		if(movie.isPresent()) {
+			return mservice.updateReleaseDate(movie.get());			
+		}
+		else {
+			return false;
+		}
 	}
 
 	@PatchMapping("/update/addGenre/{movieId}")
