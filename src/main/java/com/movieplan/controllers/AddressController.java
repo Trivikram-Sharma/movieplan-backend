@@ -131,7 +131,7 @@ public class AddressController {
 		return aservice.addAddress(address);
 	}
 
-	@PatchMapping("{doorNo}/update")
+	@PatchMapping("/update/{doorNo}")
 	public Address updateAddress(@RequestBody Address address, @PathVariable("doorNo") String doorNo) {
 		boolean addressPreCheck = address.getBuilding().equals(doorNo);
 		Address oldaddress = aservice.getAddressWithBuilding(doorNo);
@@ -152,65 +152,65 @@ public class AddressController {
 		}
 	}
 	
-	@PatchMapping("{doorNo}/update/street")
+	@PatchMapping("/update/street/{doorNo}")
 	public boolean updateAddressStreet(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String street) {
 		return aservice.updateStreet(aservice.getAddressWithBuilding(doorNo), street);
 	}
-	@PatchMapping("{doorNo}/update/area")
+	@PatchMapping("/update/area/{doorNo}")
 	public boolean updateAddressArea(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String area) {
 		return aservice.updateArea(aservice.getAddressWithBuilding(doorNo), area);
 	}
-	@PatchMapping("{doorNo}/update/city")
+	@PatchMapping("/update/city/{doorNo}")
 	public boolean updateAddressCity(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String city) {
 		return aservice.updateCity(aservice.getAddressWithBuilding(doorNo), city);
 	}
-	@PatchMapping("{doorNo}/update/state")
+	@PatchMapping("/update/state/{doorNo}")
 	public boolean updateAddressState(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String state) {
 		return aservice.updateStreet(aservice.getAddressWithBuilding(doorNo), state);
 	}
-	@PatchMapping("{doorNo}/update/country")
+	@PatchMapping("/update/country/{doorNo}")
 	public boolean updateAddressCountry(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String country) {
 		return aservice.updateCountry(aservice.getAddressWithBuilding(doorNo), country);
 	}
-	@PatchMapping("{doorNo}/update/pincode")
+	@PatchMapping("/update/pincode/{doorNo}")
 	public boolean updateAddressPinCode(@PathVariable("doorNo") String doorNo, @RequestParam(required = true) String pincode) {
 		return aservice.updatePinCode(aservice.getAddressWithBuilding(doorNo), pincode);
 	}
 
-	@DeleteMapping("{doorNo}/delete")
+	@DeleteMapping("/delete/{doorNo}")
 	public boolean deleteAddress(@PathVariable("doorNo") String doorNo) {
 		return aservice.deleteAddress(aservice.getAddressWithBuilding(doorNo));
 	}
 	
-	@DeleteMapping("delete/street")
+	@DeleteMapping("/delete/street")
 	public boolean deleteAddressesWithStreet(@RequestParam(required = true) String street) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesWithStreet(street);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;
 	}
-	@DeleteMapping("delete/area")
+	@DeleteMapping("/delete/area")
 	public boolean deleteAddressesWithArea(@RequestParam(required = true) String area) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesWithArea(area);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;
 		
 	}
-	@DeleteMapping("delete/city")
+	@DeleteMapping("/delete/city")
 	public boolean deleteAddressesWithCity(@RequestParam(required = true) String city) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesInCity(city);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;
 		
 	}
-	@DeleteMapping("delete/state")
+	@DeleteMapping("/delete/state")
 	public boolean deleteAddressesWithState(@RequestParam(required = true) String state) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesInState(state);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;
 		
 	}
-	@DeleteMapping("delete/country")
+	@DeleteMapping("/delete/country")
 	public boolean deleteAddressesWithCountry(@RequestParam(required = true) String country) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesInCountry(country);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;	
 	}
-	@DeleteMapping("delete/pincode")
+	@DeleteMapping("/delete/pincode")
 	public boolean deleteAddressesWithPinCode(@RequestParam(required = true) String pincode) {
 		List<Address> addressesToBeDeleted = aservice.getAddressesWithPincode(pincode);
 		return addressesToBeDeleted.stream().map(a -> aservice.deleteAddress(a)).filter(b -> b == false).count() == 0;	

@@ -1,0 +1,1 @@
+INSERT INTO admin (admin_username, admin_password, login_status) VALUES ('admin11','admin@11','inactive');

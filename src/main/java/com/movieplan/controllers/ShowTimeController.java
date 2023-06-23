@@ -1,5 +1,7 @@
 package com.movieplan.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +35,11 @@ public class ShowTimeController {
 	@GetMapping("/search/{showName}")
 	public ShowTimes getShowTimesByName(@PathVariable("showName") String showName) {
 		return stservice.getShowTimeByName(showName);
+	}
+	
+	@GetMapping("/get/all")
+	public List<ShowTimes> getAllShowTimes(){
+		return stservice.getAllShowTimes();
 	}
 
 	// DELETE APIs

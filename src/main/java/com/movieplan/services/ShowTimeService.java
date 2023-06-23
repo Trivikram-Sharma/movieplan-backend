@@ -32,6 +32,10 @@ public class ShowTimeService {
 			return null;
 		}
 	}
+	
+	public List<ShowTimes> getAllShowTimes(){
+		return showTimeRepo.findAll();
+	}
 
 	// Add Show Time
 	public boolean addShowTime(String showName, String startTime, String endTime) {
