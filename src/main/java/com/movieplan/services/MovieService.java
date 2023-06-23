@@ -311,7 +311,7 @@ public class MovieService {
 		}
 	}
 
-	// Enable a Movie
+	// Disable a Movie
 	public boolean disableMovie(Movie movie) {
 		Optional<Movie> existingMovie = movieRepo.findById(movie.getId());
 		if (existingMovie.isPresent()) {
