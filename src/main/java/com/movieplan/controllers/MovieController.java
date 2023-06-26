@@ -80,7 +80,7 @@ public class MovieController {
 	}
 
 	@GetMapping("/search/title")
-	public List<Movie> getMoviesByTitle(String title) {
+	public List<Movie> getMoviesByTitle(@RequestParam(required = true) String title) {
 		return mservice.getMovieByName(title);
 	}
 
