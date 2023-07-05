@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +26,7 @@ import com.movieplan.services.MovieService;
 
 @RestController
 @RequestMapping("/api/movie")
+@CrossOrigin(origins = "http://localhost:4200")
 public class MovieController {
 
 	@Autowired
@@ -42,9 +44,16 @@ public class MovieController {
 		String description = movie.getDescription();
 		LocalDate releaseDate = movie.getReleaseDate();
 		String status = movie.getStatus();
+		String filename = movie.getFileName();
 		String genre = movie.getGenres().get(0).getName();
-		return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre)
-				&& mservice.updateMovieGenres(movie.getGenres().subList(1, movie.getGenres().size() - 1), movie);
+		if(movie.getGenres().size()>1) {
+			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename)
+					&& mservice.updateMovieGenres(movie.getGenres().subList(1, movie.getGenres().size() - 1), movie);
+		}
+		else {
+			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename);
+		}
+		
 	}
 
 	//GET APIs
@@ -117,7 +126,8 @@ public class MovieController {
 
 	@GetMapping("/search/enabled")
 	public List<Movie> getEnabledMovies() {
-		return mservice.getEnabledMovies();
+		List<Movie> result = mservice.getEnabledMovies();
+		return result;
 	}
 
 	@GetMapping("/search/disabled")

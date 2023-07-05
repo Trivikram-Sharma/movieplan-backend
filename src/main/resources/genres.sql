@@ -1,2 +1,1 @@
-INSERT INTO admin (admin_username, admin_password, login_status) VALUES ('admin11','admin@11','inactive');
 INSERT INTO Genre (ID,GENRE_NAME) VALUES (1,'Action'),(2, 'Comedy'),(3,'Thriller'),(4,'Suspense'),(5,'Drama');

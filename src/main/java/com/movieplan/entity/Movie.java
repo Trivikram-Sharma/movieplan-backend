@@ -1,6 +1,7 @@
 package com.movieplan.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "Movie")
@@ -59,6 +62,8 @@ public class Movie {
 		this.language = language;
 		this.description = description;
 		this.releaseDate = releaseDate;
+		this.genres = new ArrayList<Genre>();
+		this.screenings = new ArrayList<Screening>();
 	}
 
 	////////////////////////////////////////////////
@@ -143,6 +148,14 @@ public class Movie {
 	
 	public void setReleaseDate(LocalDate releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+	public void setFilename(String filename) {
+		if(!(filename.isBlank() && filename.isEmpty())) {
+			this.filename = filename;
+		}
+	}
+	public String getFileName() {
+		return this.filename;
 	}
 	
 }

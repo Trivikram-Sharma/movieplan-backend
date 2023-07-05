@@ -47,11 +47,11 @@ public class MovieService {
 
 	// Add a Movie
 	public boolean addMovie(String id, String title, int price, String language, String description,
-			LocalDate releaseDate, String status, String genre) {
+			LocalDate releaseDate, String status, String genre,String filename) {
 		Movie movie = new Movie(id, title, price, language, description, releaseDate);
 		movie.setStatus(null == status ? "enabled" : status);
 		List<Genre> genreList = genreRepo.findByName(genre);
-
+		movie.setFilename(filename.substring(filename.lastIndexOf("\\")+1));
 		if (genreList.size() == 1) {
 			movie.addGenre(genreList.get(0));
 			List<Movie> presentMovies = movieRepo.getParticularMovie(title, language, description, releaseDate);
@@ -171,7 +171,8 @@ public class MovieService {
 
 	// Get Enabled Movies
 	public List<Movie> getEnabledMovies() {
-		return movieRepo.findByStatus("enabled");
+		List<Movie> result = movieRepo.findByStatus("enabled");
+		return result;
 	}
 
 	// Get Disabled Movies
@@ -389,6 +390,7 @@ public class MovieService {
 		if (presentMovie.isPresent()) {
 			List<Genre> existingGenres = presentMovie.get().getGenres();
 			Optional<Genre> existingGenre;
+			if(genres!=null && !genres.isEmpty()) {
 			for (Genre genre : genres) {
 				if (!existingGenres.contains(genre)) {
 					existingGenre = genreRepo.findById(genre.getId());
@@ -405,7 +407,7 @@ public class MovieService {
 				} else {
 					genres.remove(genre);
 				}
-			}
+			}}
 			movieRepo.save(movie);
 			if (presentMovie.isPresent() && presentMovie.get().getGenres().size() == genres.size()
 					&& presentMovie.get().getGenres().containsAll(genres)) {

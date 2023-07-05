@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "Genre")
 public class Genre {
@@ -21,6 +23,7 @@ public class Genre {
 	private String name;
 
 	@ManyToMany(mappedBy = "genres")
+	@JsonIgnore
 	private List<Movie> movies;
 	
 	//Constructors
