@@ -404,9 +404,10 @@ public class MovieService {
 								genre.getName());
 						return false;
 					}
-				} else {
-					genres.remove(genre);
-				}
+				} 
+//				else {
+//					genres.remove(genre);
+//				}
 			}}
 			movieRepo.save(movie);
 			if (presentMovie.isPresent() && presentMovie.get().getGenres().size() == genres.size()
@@ -633,21 +634,44 @@ public class MovieService {
 			List<Genre> genres = presentMovie.get().getGenres();
 			List<Screening> screenings = presentMovie.get().getScreenings();
 			boolean genresRemoved = false, screeningsRemoved = false;
-			for (Genre genre : genres) {
-				genresRemoved = deleteGenreFromMovie(genre, movie);
+//			for (Genre genre : genres) {
+//				genresRemoved = deleteGenreFromMovie(genre, movie);
+//				if (!genresRemoved) {
+//					genresRemoved = false;
+//					break;
+//				}
+//			}
+			int genreindex=0,screeningindex = 0;
+			if(genres.size() ==0) {
+				genresRemoved = true;
+			}
+			if(screenings.size() == 0) {
+				screeningsRemoved = true;
+			}
+			while(genres.size() != 0) {
+				genresRemoved = deleteGenreFromMovie(genres.get(genreindex), movie);
 				if (!genresRemoved) {
 					genresRemoved = false;
 					break;
 				}
+				genreindex++;
+				
 			}
-			for (Screening screening : screenings) {
-				screeningsRemoved = deleteMovieScreening(movie, screening);
+//			for (Screening screening : screenings) {
+//				screeningsRemoved = deleteMovieScreening(movie, screening);
+//				if (!screeningsRemoved) {
+//					screeningsRemoved = false;
+//					break;
+//				}
+//			}
+			while(screenings.size() != 0) {
+				screeningsRemoved = deleteMovieScreening(movie, screenings.get(screeningindex));
 				if (!screeningsRemoved) {
 					screeningsRemoved = false;
 					break;
 				}
+				screeningindex++;
 			}
-
 			if (genresRemoved && screeningsRemoved) {
 				movieRepo.delete(presentMovie.get());
 				if (movieRepo.findById(movie.getId()).isPresent()) {
