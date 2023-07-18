@@ -195,6 +195,18 @@ public class TheatreService {
 				tr.get().setAddress(null);
 				trep.save(tr.get());
 				return trep.findById(theatre.getId()).filter(t -> t.getAddress() == null).isPresent();
+			}else if(tr.get().getScreens() != 0) {
+				boolean screensRemoved = removeTheatreScreens(tr.get());
+				if(screensRemoved) {
+					tr.get().setAddress(null);
+					trep.save(tr.get());
+					return trep.findById(theatre.getId()).filter(t -> t.getAddress() == null).isPresent();					
+				}
+				else {
+					logger.error("{} Screens are present in the below theatre and failed to be removed! Please check the below theatre and verify!\n{}",tr.get().getScreens(),
+							tr.get());
+					return false;
+				}
 			} else {
 				logger.warn(
 						"{} screenings are scheduled in the theatre and {} screens are present in the theatre."

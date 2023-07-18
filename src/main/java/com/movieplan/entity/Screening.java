@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Screening {
 	@Id

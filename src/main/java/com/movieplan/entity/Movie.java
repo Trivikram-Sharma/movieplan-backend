@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "Movie")
@@ -40,13 +40,15 @@ public class Movie {
 	@ColumnDefault(value = "'enabled'")
 	private String status;
 	
-	private String filename;
+	@Column(name="filename")
+	private String fileName;
 
 	@ManyToMany
 	private List<Genre> genres;
 
 	@OneToMany(mappedBy = "movie")
-	private List<Screening> screenings;
+	@JsonIgnore
+	private List<Screening> screenings = new ArrayList<Screening>();
 
 	///////////////////////////////////////////////
 	public Movie() {
@@ -151,11 +153,11 @@ public class Movie {
 	}
 	public void setFilename(String filename) {
 		if(!(filename.isBlank() && filename.isEmpty())) {
-			this.filename = filename;
+			this.fileName = filename;
 		}
 	}
 	public String getFileName() {
-		return this.filename;
+		return this.fileName;
 	}
 	
 }

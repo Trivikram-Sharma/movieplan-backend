@@ -1,5 +1,6 @@
 package com.movieplan.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Theatre {
@@ -26,7 +29,8 @@ public class Theatre {
 	private Address address;
 
 	@OneToMany
-	private List<Screening> screenings;
+	@JsonIgnore
+	private List<Screening> screenings = new ArrayList<Screening>();
 
 	// Getters and Setters
 
@@ -63,7 +67,7 @@ public class Theatre {
 	}
 
 	public void addScreening(Screening screening) {
-		if (null != screening && screenings.size() < this.screens) {
+		if (null != screening && null!=this.screenings && this.screenings.size() < this.screens) {
 			this.screenings.add(screening);
 		}
 	}

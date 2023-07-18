@@ -48,7 +48,7 @@ public class MovieController {
 		String genre = movie.getGenres().get(0).getName();
 		if(movie.getGenres().size()>1) {
 			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename)
-					&& mservice.updateMovieGenres(movie.getGenres().subList(1, movie.getGenres().size() - 1), movie);
+					&& mservice.updateMovieGenres(movie.getGenres(), movie);
 		}
 		else {
 			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename);

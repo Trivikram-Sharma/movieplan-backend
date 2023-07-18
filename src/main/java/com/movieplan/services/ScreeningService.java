@@ -51,25 +51,42 @@ public class ScreeningService {
 		Optional<Screening> scr = srep.findById(screening.getId());
 		if (scr.isEmpty()) {
 			boolean theatrePreCheck = Optional.of(screening.getTheatre())
-					.filter(t -> t.getScreenings().size() < t.getScreens() && !t.getScreenings().contains(screening))
+					.filter(t -> (t.getScreenings()==null) ||  (t.getScreenings().size() < t.getScreens() && !t.getScreenings().contains(screening)))
 					.isPresent();
 			boolean moviePreCheck = Optional.of(screening.getMovie())
-					.filter(m -> !m.getScreenings().contains(screening) && m.getStatus().equals("enabled")).isPresent();
+					.filter(m -> (m.getScreenings()==null || !m.getScreenings().contains(screening)) && m.getStatus().equals("enabled")).isPresent();
 			boolean showTimePreCheck = Optional.of(screening.getShowTime())
-					.filter(st -> !st.getScreenings().contains(screening)).isPresent();
-			boolean datePreCheck = screening.getTheatre().getScreenings().stream()
+					.filter(st -> st.getScreenings()==null || !st.getScreenings().contains(screening)).isPresent();
+			//Initializing Date pre check
+			boolean datePreCheck = false;
+			//If the theatre has no screenings at all, determine if date is valid, i.e., not a past date.
+			if(screening.getTheatre().getScreenings()==null) {
+				datePreCheck = !screening.getDate().isBefore(LocalDate.now());
+			}
+			else {
+				//If theatre does have screenings, checking to ensure that the screenings in that theatre, on that day, on the particular showtime, are less
+				//than total screens available in the theatre
+			datePreCheck = screening.getTheatre().getScreenings().stream()
 					.filter(s -> s.getDate().equals(screening.getDate()))
 					.filter(s -> s.getShowTime().getShowName().equals(screening.getShowTime().getShowName()))
 					.count() < screening.getTheatre().getScreens() && !screening.getDate().isBefore(LocalDate.now());
-			if (screening.getShowTime().getStartTime().equals(LocalTime.now())
-					|| LocalTime.now().getMinute() - screening.getShowTime().getStartTime().getMinute() <= 15) {
+			}
+			//Separated Conditions for simplicity and readability
+			boolean isSameDate = screening.getDate().equals(LocalDate.now());
+			boolean exactTime = screening.getShowTime().getStartTime().equals(LocalTime.now());
+			boolean at15Minutes = LocalTime.now().equals(screening.getShowTime().getStartTime().plusMinutes(15L));
+			boolean betweenTime = LocalTime.now().isBefore(screening.getShowTime().getStartTime().plusMinutes(15L))
+					&& LocalTime.now().isAfter(screening.getShowTime().getStartTime());
+			boolean isPastDate = screening.getDate().isBefore(LocalDate.now());
+			boolean isFutureDate = screening.getDate().isAfter(LocalDate.now());
+			if (isSameDate && (exactTime || at15Minutes || betweenTime)) {
 				screening.setStatus("Started");
-			} else if (LocalTime.now().isAfter(screening.getShowTime().getStartTime().plusMinutes(15L))
+			} else if (isSameDate && LocalTime.now().isAfter(screening.getShowTime().getStartTime().plusMinutes(15L))
 					&& LocalTime.now().isBefore(screening.getShowTime().getEndTime())) {
 				screening.setStatus("Running");
-			} else if (LocalTime.now().isAfter(screening.getShowTime().getEndTime())) {
+			} else if (isPastDate || (isSameDate &&LocalTime.now().isAfter(screening.getShowTime().getEndTime()))) {
 				screening.setStatus("Closed");
-			} else if (LocalTime.now().isBefore(screening.getShowTime().getStartTime())) {
+			} else if ( (isFutureDate) ||(isSameDate && LocalTime.now().isBefore(screening.getShowTime().getStartTime()))) {
 				screening.setStatus("Not Started");
 			} else {
 				logger.error(
@@ -92,7 +109,8 @@ public class ScreeningService {
 			} else {
 				logger.error(
 						"One or more of the following conditions is not satisfied. Thus, screening is not added to the database! \n "
-								+ "theatrePreCheck -> {}, \n moviePreCheck -> {}, \n showTimePreCheck -> {}, \n datePreCheck -> {}, \n statusPreCheck-> {}");
+								+ "theatrePreCheck -> {}, \n moviePreCheck -> {}, \n showTimePreCheck -> {}, \n datePreCheck -> {}, \n statusPreCheck-> {}",
+								theatrePreCheck, moviePreCheck, showTimePreCheck, datePreCheck, statusPreCheck);
 				return false;
 			}
 		} else {
@@ -246,7 +264,26 @@ public class ScreeningService {
 										&& s.getStatus().equals(scr.get().getStatus())
 										&& s.getDate().isEqual(scr.get().getDate()))
 						.count();
-				boolean showTimePreCheck = stime.get().getStartTime().isAfter(LocalTime.now())
+				boolean isPastDate = scr.get().getDate().isBefore(LocalDate.now());
+				boolean isToday = scr.get().getDate().isEqual(LocalDate.now());
+				boolean isFutureDate = scr.get().getDate().isAfter(LocalDate.now());
+				//Initializing showtimecheck to false. i.e., checking if the current time is before the start of the show. However, this
+				//applies only if the date of screening is today. On the other hand, for past date screenings, this will be left false and for future dates,
+				//it will be true as the show hasn't even started. Thus, the three if conditions below.
+				boolean showtimecheck = false;
+				if(isPastDate) {
+					//For past dates, it doesn't apply as there is no point in changing showtime for a past screening.
+					showtimecheck = false;
+				}
+				else if(isToday) {
+					//For today, the current time must be before the start time of the show. or conversely, the show start time, should be after the current time.
+					showtimecheck = stime.get().getStartTime().isAfter(LocalTime.now());
+				}
+				else if(isFutureDate) {
+					//For future dates, this is directly true, as the show hasn't even started.
+					showtimecheck = true;
+				}
+				boolean showTimePreCheck = showtimecheck
 						&& showTimeConflictScreenings == 0 && (scr.get().getStatus().equals("Not Started"));
 				if (showTimePreCheck) {
 					scr.get().getShowTime().removeScreening(scr.get());
@@ -267,7 +304,11 @@ public class ScreeningService {
 								scr.get().getShowTime(), stime.get());
 						return false;
 					}
-				} else {
+				}else if(scr.get().getShowTime().getId() == stime.get().getId()) {
+					logger.warn("The new desired showtime, is already the same as the existing showtime of the screening! Thus, not carrying out further operations..");
+					return true;
+				}
+				else {
 					logger.error(
 							"ShowTime Pre check has failed! Please check if there are conflicting screenings during the target showtime or"
 									+ " if the showTime is after the current time." + " \n Target ShowTime -> {} ",
@@ -303,7 +344,11 @@ public class ScreeningService {
 			if (datePreCheck) {
 				scr.get().setDate(date);
 				return Optional.of(srep.save(scr.get())).filter(s -> s.getDate().isEqual(date)).isPresent();
-			} else {
+			}else if(scr.get().getDate().equals(date)) {
+				logger.warn("The new desired date is same as the existing date of the screening! Thus, not updating/carrying out any operations!");
+				return true;
+			} 
+			else {
 				logger.error("The date is not valid! Please provide a date after today and verify!"
 						+ " Also check the status of the screening.\n" + "Screening -> {}, \n Target Date -> {}",
 						scr.get(), date);

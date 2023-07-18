@@ -1,6 +1,7 @@
 package com.movieplan.entity;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "show_times")
@@ -28,7 +31,8 @@ public class ShowTimes {
 	private LocalTime endTime;
 
 	@OneToMany(mappedBy = "showTime")
-	private List<Screening> screenings;
+	@JsonIgnore
+	private List<Screening> screenings = new ArrayList<Screening>();
 
 	// Constructors
 	public ShowTimes() {
