@@ -387,45 +387,60 @@ public class MovieService {
 	// Update movie genres multiple at a time
 	public boolean updateMovieGenres(List<Genre> genres, Movie movie) {
 		Optional<Movie> presentMovie = movieRepo.findById(movie.getId());
+		int i=0;
 		if (presentMovie.isPresent()) {
 			List<Genre> existingGenres = presentMovie.get().getGenres();
 			Optional<Genre> existingGenre;
 			if(genres!=null && !genres.isEmpty()) {
 			//Add all newly desired genres into the existing Genres, if they are not present
-			for (Genre genre : genres) {
-				if (!existingGenres.contains(genre)) {
-					existingGenre = genreRepo.findById(genre.getId());
+//			for (Genre genre : genres) {
+				while(i<genres.size()) {
+				if (!existingGenres.contains(genres.get(i))) {
+					existingGenre = genreRepo.findById(genres.get(i).getId());
 					if (existingGenre.isPresent()) {
-						movie.addGenre(genre);
-						existingGenre.get().addMovie(movie);
+						presentMovie.get().addGenre(genres.get(i));
+						existingGenre.get().addMovie(presentMovie.get());
 						genreRepo.save(existingGenre.get());
 					} else {
 						logger.error(
 								"The genre {} is not present in the database. Please check the genre table and verify!",
-								genre.getName());
+								genres.get(i).getName());
 						return false;
 					}
 				}
+				i++;
+//			}
 			}
+			genres = genres.stream().map(
+					gn -> genreRepo.findById(gn.getId()).get()
+					).collect(Collectors.toList());
+			existingGenres = presentMovie.get().getGenres().stream()
+					.map(
+							gn -> genreRepo.findById(gn.getId()).get()
+							).collect(Collectors.toList());
 			//Remove any existing genres which are not part of newly desired genre list
-			for(Genre g: existingGenres) {
-				if(!genres.contains(g)) {
-					existingGenre = genreRepo.findById(g.getId());
+//			for(Genre g: existingGenres) {
+				i = 0;
+				while(i<existingGenres.size()) {
+				if(!genres.contains(existingGenres.get(i))) {
+					existingGenre = genreRepo.findById(existingGenres.get(i).getId());
 					if (existingGenre.isPresent()) {
-						movie.removeGenre(g);
-						existingGenre.get().removeMovie(movie);
+						presentMovie.get().removeGenre(existingGenres.get(i));
+						existingGenre.get().removeMovie(presentMovie.get());
 						genreRepo.save(existingGenre.get());
 					} else {
 						logger.error(
 								"The genre {} is not present in the database. Please check the genre table and verify before tryin to remove it from movie {}!",
-								g.getName(),movie.getTitle());
+								existingGenres.get(i).getName(),movie.getTitle());
 						return false;
 					}
 				}
+				i++;
+//			}
 			}
 			
 			}
-			movieRepo.save(movie);
+			movieRepo.save(presentMovie.get());
 			if (presentMovie.isPresent() && presentMovie.get().getGenres().size() == genres.size()
 					&& presentMovie.get().getGenres().containsAll(genres)) {
 				logger.info("Movie genres updated successfully! The updated movie is as shown below \n {}",
@@ -664,7 +679,7 @@ public class MovieService {
 			if(screenings.size() == 0) {
 				screeningsRemoved = true;
 			}
-			while(genres.size() != 0) {
+			while(genreindex < genres.size()) {
 				genresRemoved = deleteGenreFromMovie(genres.get(genreindex), movie);
 				if (!genresRemoved) {
 					genresRemoved = false;
@@ -680,7 +695,7 @@ public class MovieService {
 //					break;
 //				}
 //			}
-			while(screenings.size() != 0) {
+			while(screeningindex < screenings.size()) {
 				screeningsRemoved = deleteMovieScreening(movie, screenings.get(screeningindex));
 				if (!screeningsRemoved) {
 					screeningsRemoved = false;

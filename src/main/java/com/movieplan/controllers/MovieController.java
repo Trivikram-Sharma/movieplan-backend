@@ -46,9 +46,19 @@ public class MovieController {
 		String status = movie.getStatus();
 		String filename = movie.getFileName();
 		String genre = movie.getGenres().get(0).getName();
+		
+		List<Genre> genres = movie.getGenres()
+				.stream().map(
+						gn -> genreService.getAllGenresByName(gn.getName()).get(0)
+						).collect(Collectors.toList());
+		
+		
+		
+		
+		
 		if(movie.getGenres().size()>1) {
 			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename)
-					&& mservice.updateMovieGenres(movie.getGenres(), movie);
+					&& mservice.updateMovieGenres(genres, movie);
 		}
 		else {
 			return mservice.addMovie(id, tilte, price, language, description, releaseDate, status, genre,filename);
