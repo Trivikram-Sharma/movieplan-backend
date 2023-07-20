@@ -1,15 +1,18 @@
 package com.movieplan.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Screening {
@@ -27,6 +30,10 @@ public class Screening {
 	private ShowTimes showTime;
 	
 	private LocalDate date;
+	
+	@OneToMany(mappedBy = "screening")
+	@JsonIgnore
+	private List<Ticket> tickets = new ArrayList<Ticket>();
 	
 	@ColumnDefault(value = "'Not started'")
 	private String status;
@@ -80,7 +87,19 @@ public class Screening {
 	public String getStatus() {
 		return this.status;
 	}
-	
+	public void addTicket(Ticket t) {
+		if(null!=t) {
+			this.tickets.add(t);			
+		}
+	}
+	public List<Ticket> getTickets(){
+		return this.tickets;
+	}
+	public void removeTicket(Ticket t) {
+		if(this.tickets.contains(t)) {
+			this.tickets.remove(t);
+		}
+	}
 	
 	
 }

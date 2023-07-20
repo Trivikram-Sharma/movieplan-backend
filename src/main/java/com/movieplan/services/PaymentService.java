@@ -30,7 +30,8 @@ public class PaymentService {
 	//CREATE METHODS
 	public boolean addPayment(Payment p) {
 		List<Integer> prices = p.getTickets().stream()
-		.map(t -> t.getMovie())
+		.map(t -> t.getScreening())
+		.map(s -> s.getMovie())
 		.map(m -> m.getPrice())
 		.collect(Collectors.toList());
 		int sum = 0;
@@ -89,7 +90,8 @@ public class PaymentService {
 		Optional<Payment> payment = prep.findById(p.getId());
 		if(payment.isPresent()) {
 			List<Integer> prices = p.getTickets().stream()
-					.map(t -> t.getMovie())
+					.map(t -> t.getScreening())
+					.map(s -> s.getMovie())
 					.map(m -> m.getPrice())
 					.collect(Collectors.toList());
 			int sum = 0;

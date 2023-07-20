@@ -18,8 +18,8 @@ public class Ticket {
 	@OneToOne
 	private User user;
 	
-	@OneToOne
-	private Movie movie;
+	@ManyToOne
+	private Screening screening;
 
 	@ManyToOne
 	private Payment payment;
@@ -48,13 +48,15 @@ public class Ticket {
 		this.payment = payment;
 	}
 
-	public Movie getMovie() {
-		return movie;
+	public Screening getScreening() {
+		return screening;
 	}
 
-	public void setMovie(Movie movie) {
-		this.movie = movie;
+	public void setScreening(Screening screening) {
+		this.screening = screening;
 	}
+
+	
 	
 	
 }

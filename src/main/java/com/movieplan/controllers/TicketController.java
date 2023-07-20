@@ -1,6 +1,8 @@
 package com.movieplan.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.movieplan.entity.Movie;
+import com.movieplan.entity.Screening;
 import com.movieplan.entity.Ticket;
+import com.movieplan.services.MovieService;
+import com.movieplan.services.ScreeningService;
 import com.movieplan.services.TicketService;
 
 @RestController
@@ -24,6 +30,11 @@ public class TicketController {
 	@Autowired
 	private TicketService tservice;
 	
+	@Autowired
+	private MovieService mservice;
+	
+	@Autowired
+	private ScreeningService sservice;
 	//POST MAPPINGS
 	@PostMapping("/add")
 	public boolean purchaseTicket(@RequestBody Ticket ticket) {
@@ -37,7 +48,14 @@ public class TicketController {
 	}
 	@GetMapping("/get/movietitle")
 	public List<Ticket> getTicketsByMovieId(@RequestParam(required = true) String movieId){
-		return tservice.getTicketsByMovie(movieId);
+		Movie m = mservice.getMovieWithId(movieId).get();
+		List<Screening> s = sservice.getScreeningsWithMovie(m);
+		List<Ticket> result = new ArrayList<Ticket>();
+		for(Screening sc: s) {
+			result.addAll(tservice.getTicketsByScreening(sc.getId()));
+		}
+		result = result.stream().distinct().collect(Collectors.toList());
+		return result;
 	}
 	@GetMapping("/get/id")
 	public Ticket getTicketById(@RequestParam(required = true) String id) {
@@ -56,10 +74,11 @@ public class TicketController {
 			return tservice.updateTicketUser(t, userId);
 	}
 	
-	@PatchMapping("/update/movie/{id}")
-	public boolean updateTicketMovie(@PathVariable("id") String id, @RequestParam(required = true) String movieId) {
+	@PatchMapping("/update/screening/{id}")
+	public boolean updateTicketScreening(@PathVariable("id") String id, @RequestParam(required = true) String screeningId) {
 		Ticket t = tservice.getTicketById(Integer.parseInt(id));
-		return tservice.updateTicketMovie(t, movieId);
+		Screening s = sservice.getScreeningWithId(screeningId);
+		return tservice.updateTicketScreening(t, s);
 	}
 	
 	//DELETE APIs

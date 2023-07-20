@@ -6,14 +6,16 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Service;
 
 import com.movieplan.entity.Movie;
 import com.movieplan.entity.Payment;
+import com.movieplan.entity.Screening;
 import com.movieplan.entity.Ticket;
 import com.movieplan.entity.User;
 import com.movieplan.repository.MovieRepository;
 import com.movieplan.repository.PaymentRepository;
+import com.movieplan.repository.ScreeningRepository;
 import com.movieplan.repository.TicketRepository;
 import com.movieplan.repository.UserRepository;
 
@@ -29,6 +31,8 @@ public class TicketService {
 	
 	@Autowired
 	private MovieRepository mrep;
+	@Autowired
+	private ScreeningRepository srep;
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -64,13 +68,13 @@ public class TicketService {
 		}
 	}
 
-	public List<Ticket> getTicketsByMovie(String movieId) {
-		Optional<Movie> movie = mrep.findById(movieId);
-		if(movie.isPresent()) {
-			return trep.findByMovie(movie.get());
+	public List<Ticket> getTicketsByScreening(int screeningId) {
+		Optional<Screening> screening = srep.findById(screeningId);
+		if(screening.isPresent()) {
+			return trep.findByScreening(screening.get());
 		}
 		else {
-			logger.error("Movie with id -> {}, is not present. Please check movies and try again!",movieId);
+			logger.error("Screening with id -> {}, is not present. Please check screenings and try again!",screeningId);
 			return null;
 		}
 	}
@@ -97,22 +101,61 @@ public class TicketService {
 	}
 	
 	
-	public boolean updateTicketMovie(Ticket ticket, String movieId) {
-		Optional<Movie> movie = mrep.findById(movieId);
-		if(movie.isPresent()) {
+//	public boolean updateTicketMovie(Ticket ticket, String movieId) {
+//		Optional<Movie> movie = mrep.findById(movieId);
+//		if(movie.isPresent()) {
+//			Optional<Ticket> t = trep.findById(ticket.getId());
+//			if(t.isPresent()) {
+//				t.get().setMovie(movie.get());
+//				return !Optional.of(trep.save(t.get()))
+//						.filter(tk -> tk.getMovie().getId().equals(movieId)).isEmpty();
+//			}
+//			else {
+//				logger.error("Ticket with id -> {} is not present! Please check tickets and try again!",ticket.getId());
+//				return false;
+//			}
+//		}
+//		else {
+//			logger.error("Movie with id -> {}, is not present. Please check movies and try again!",movieId);
+//			return false;
+//		}
+//	}
+	public boolean updateTicketScreening(Ticket ticket, Screening screening) {
+		Optional<Screening> s = srep.findById(screening.getId());
+		//Placeholder to check that the screening is updated with the ticket
+		boolean updatedScreening = false;
+		if(s.isPresent()) {
 			Optional<Ticket> t = trep.findById(ticket.getId());
 			if(t.isPresent()) {
-				t.get().setMovie(movie.get());
-				return !Optional.of(trep.save(t.get()))
-						.filter(tk -> tk.getMovie().getId().equals(movieId)).isEmpty();
+//				s.get().addTicket(t.get());
+//				t.get().setScreening(s.get());
+//				return !Optional.of(
+//						srep.save(s.get())).isEmpty() &&
+//						!Optional.of(trep.save(t.get())).filter(tk -> tk.getScreening().getId() == s.get().getId()).isEmpty();
+				boolean notContainsTicket = Optional.of(
+						s.get().getTickets().stream().filter(
+								tkt -> tkt.getId() == t.get().getId()
+								)
+						).isEmpty();
+				if(notContainsTicket) {
+					s.get().addTicket(t.get());
+					updatedScreening = !Optional.of(srep.save(s.get())).filter(scr -> scr.getTickets().contains(t.get())).isEmpty();
+				}
+				else {
+					logger.warn("The ticket is already present in the screening! Thus, not updating the screening!");
+					updatedScreening = true;
+				}
+				t.get().setScreening(s.get());
+				return !Optional.of(trep.save(t.get())).filter(tk -> tk.getScreening().getId() == s.get().getId()).isEmpty() 
+						&& updatedScreening;
 			}
 			else {
-				logger.error("Ticket with id -> {} is not present! Please check tickets and try again!",ticket.getId());
+				logger.error("The ticket {} is not present! Please check the database and verify!",ticket);
 				return false;
 			}
 		}
 		else {
-			logger.error("Movie with id -> {}, is not present. Please check movies and try again!",movieId);
+			logger.error("The Screening {} is not present! Please check the database and verify!",screening);
 			return false;
 		}
 	}
