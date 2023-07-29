@@ -31,6 +31,8 @@ public class Screening {
 	
 	private LocalDate date;
 	
+//	private int seats;
+	
 	@OneToMany(mappedBy = "screening")
 	@JsonIgnore
 	private List<Ticket> tickets = new ArrayList<Ticket>();
@@ -87,6 +89,20 @@ public class Screening {
 	public String getStatus() {
 		return this.status;
 	}
+	
+//	public int getSeats() {
+//		return this.seats;
+//	}
+//	
+//	public void setSeats(int seats) {
+//		if(seats >=0) {
+//			this.seats = seats;			
+//		}
+//	}
+	
+	
+	
+	
 	public void addTicket(Ticket t) {
 		if(null!=t) {
 			this.tickets.add(t);			

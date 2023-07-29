@@ -67,6 +67,11 @@ public class TicketController {
 		return tservice.getTicketsByPaymentId(paymentId);
 	}
 	
+	@GetMapping("/get/all")
+	public List<Ticket> getAllTickets(){
+		return tservice.getAllTickets();
+	}
+	
 	//PATCH APIs
 	@PatchMapping("/update/user/{id}")
 	public boolean updateTicketUser(@PathVariable("id") String id, @RequestParam(required = true) String userId) {

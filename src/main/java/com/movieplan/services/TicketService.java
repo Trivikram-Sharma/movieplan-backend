@@ -2,6 +2,7 @@ package com.movieplan.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,38 @@ public class TicketService {
 	// CREATE METHODS
 
 	public boolean addTicket(Ticket ticket) {
-		return trep.save(ticket) != null;
+		Screening s = ticket.getScreening();
+		boolean screeningUpdated = false;
+		List<Ticket> et = trep.findByScreening(s);
+		et = et.stream().filter(
+				tkt -> tkt.getUser().getUserName().equals(ticket.getUser().getUserName())
+				).collect(Collectors.toList());
+		if(et.size() > 0) {
+			logger.warn("User {} has multiple tickets in the below screening {}! Please check the screening and the tickets and verify!",
+					ticket.getUser().getUserName(),s);
+			return false;
+		}
+		else {
+			Optional<Screening> sOp = srep.findById(s.getId());
+			if(sOp.isPresent()) {
+				sOp.get().addTicket(ticket);
+				screeningUpdated = !Optional.of(
+						srep.save(sOp.get())						
+						).filter(scr -> scr.getId() == s.getId() && scr.getTickets().contains(ticket)).isEmpty();
+			}
+			else {
+				logger.error("The Screening is not present! Please check database and verify!");
+				return false;
+			}
+		}
+		boolean result =  screeningUpdated && trep.save(ticket) != null;
+		if(!result) {
+			logger.error("The screening {} not updated successfully!",s);
+		}
+		else {
+			logger.info("The Screening {} updated successfully!",s);
+		}
+		return result;
 	}
 
 	// READ METHODS
@@ -78,6 +110,12 @@ public class TicketService {
 			return null;
 		}
 	}
+	
+	public List<Ticket> getAllTickets(){
+		return trep.findAll();
+	}
+	
+	
 	// UPDATE METHODS
 	public boolean updateTicketUser(Ticket ticket, String userId) {
 		Optional<User> user = urep.findById(userId);

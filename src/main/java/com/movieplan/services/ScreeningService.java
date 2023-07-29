@@ -94,7 +94,7 @@ public class ScreeningService {
 						screening, LocalTime.now());
 				return false;
 			}
-			boolean statusPreCheck = !screening.getShowTime().getStartTime().isBefore(LocalTime.now())
+			boolean statusPreCheck = (!isPastDate && (isSameDate && !screening.getShowTime().getStartTime().isBefore(LocalTime.now())))
 					&& !(screening.getStatus().equals("Running") || screening.getStatus().equals("Closed"));
 			if (theatrePreCheck && moviePreCheck && showTimePreCheck && datePreCheck && statusPreCheck) {
 				screening.getTheatre().addScreening(screening);
