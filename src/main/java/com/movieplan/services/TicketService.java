@@ -55,9 +55,12 @@ public class TicketService {
 			Optional<Screening> sOp = srep.findById(s.getId());
 			if(sOp.isPresent()) {
 				sOp.get().addTicket(ticket);
-				screeningUpdated = !Optional.of(
-						srep.save(sOp.get())						
-						).filter(scr -> scr.getId() == s.getId() && scr.getTickets().contains(ticket)).isEmpty();
+				srep.save(sOp.get());
+				screeningUpdated = !srep.findById(s.getId())
+						.filter(scr -> scr.getId() == s.getId() && scr.getTickets().contains(ticket)).isEmpty();
+				logger.info("Saved screening ->",srep.findById(s.getId()).get());
+				logger.info("getTickets() of the screening -> {}",srep.findById(s.getId()).get().getTickets());
+				
 			}
 			else {
 				logger.error("The Screening is not present! Please check database and verify!");

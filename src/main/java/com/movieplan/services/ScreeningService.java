@@ -84,7 +84,8 @@ public class ScreeningService {
 			} else if (isSameDate && LocalTime.now().isAfter(screening.getShowTime().getStartTime().plusMinutes(15L))
 					&& LocalTime.now().isBefore(screening.getShowTime().getEndTime())) {
 				screening.setStatus("Running");
-			} else if (isPastDate || (isSameDate &&LocalTime.now().isAfter(screening.getShowTime().getEndTime()))) {
+			} else if (isPastDate || (isSameDate &&LocalTime.now().isAfter(screening.getShowTime().getEndTime()) 
+					&& !screening.getShowTime().getShowName().equals("Second show"))) {
 				screening.setStatus("Closed");
 			} else if ( (isFutureDate) ||(isSameDate && LocalTime.now().isBefore(screening.getShowTime().getStartTime()))) {
 				screening.setStatus("Not Started");
@@ -94,8 +95,9 @@ public class ScreeningService {
 						screening, LocalTime.now());
 				return false;
 			}
-			boolean statusPreCheck = (!isPastDate && (isSameDate && !screening.getShowTime().getStartTime().isBefore(LocalTime.now())))
-					&& !(screening.getStatus().equals("Running") || screening.getStatus().equals("Closed"));
+			boolean statusPreCheck = 
+//					(!isPastDate && (isSameDate && !screening.getShowTime().getStartTime().isBefore(LocalTime.now()))) && 
+					!(screening.getStatus().equals("Running") || screening.getStatus().equals("Closed"));
 			if (theatrePreCheck && moviePreCheck && showTimePreCheck && datePreCheck && statusPreCheck) {
 				screening.getTheatre().addScreening(screening);
 				screening.getMovie().addScreening(screening);
