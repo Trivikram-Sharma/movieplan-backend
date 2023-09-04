@@ -1,11 +1,10 @@
 package com.movieplan.entity;
 
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,8 +21,8 @@ public class Search {
 	
 	private String searchKeyword;
 	
-	@ManyToMany(mappedBy="searches")
-	private List<Filter> filters;
+	@ManyToOne
+	private FilterSet filterSet;
 	
 	private String sortField;
 	
@@ -61,12 +60,12 @@ public class Search {
 		this.searchKeyword = searchKeyword;
 	}
 
-	public List<Filter> getFilters() {
-		return filters;
+	public FilterSet getFilterSet() {
+		return this.filterSet;
 	}
 
-	public void setFilters(List<Filter> filters) {
-		this.filters = filters;
+	public void setFilterSet(FilterSet filterSet) {
+		this.filterSet = filterSet;
 	}
 
 	public String getSortField() {

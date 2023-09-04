@@ -41,6 +41,7 @@ public class TicketService {
 
 	public boolean addTicket(Ticket ticket) {
 		Screening s = ticket.getScreening();
+		Screening existingScreening;
 		boolean screeningUpdated = false;
 		List<Ticket> et = trep.findByScreening(s);
 		et = et.stream().filter(
@@ -54,11 +55,13 @@ public class TicketService {
 		else {
 			Optional<Screening> sOp = srep.findById(s.getId());
 			if(sOp.isPresent()) {
-				sOp.get().addTicket(ticket);
-				srep.save(sOp.get());
-				screeningUpdated = !srep.findById(s.getId())
-						.filter(scr -> scr.getId() == s.getId() && scr.getTickets().contains(ticket)).isEmpty();
-				logger.info("Saved screening ->",srep.findById(s.getId()).get());
+				existingScreening = sOp.get();
+				existingScreening.addTicket(ticket);
+				
+//				screeningUpdated = !srep.findById(s.getId())
+//						.filter(scr -> scr.getId() == s.getId() && scr.getTickets().contains(ticket)).isEmpty();
+				screeningUpdated = srep.save(existingScreening)!=null;
+				logger.info("Saved screening -> {}",srep.findById(s.getId()).get());
 				logger.info("getTickets() of the screening -> {}",srep.findById(s.getId()).get().getTickets());
 				
 			}

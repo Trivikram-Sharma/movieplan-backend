@@ -28,7 +28,7 @@ public class PaymentService {
 	private Logger logger  = LoggerFactory.getLogger(this.getClass());
 	
 	//CREATE METHODS
-	public boolean addPayment(Payment p) {
+	public Payment addPayment(Payment p) {
 		List<Integer> prices = p.getTickets().stream()
 		.map(t -> t.getScreening())
 		.map(s -> s.getMovie())
@@ -39,12 +39,12 @@ public class PaymentService {
 			sum+=k;
 		}
 		if(p.getAmount() >= sum) {
-			return prep.save(p)!=null;
+			return prep.save(p);
 		}
 		else {
 			logger.warn("The payment amount is less than the total of individual ticket prices!"
 					+ " Please check and try again!");
-			return false;
+			return null;
 		}
 	}
 	

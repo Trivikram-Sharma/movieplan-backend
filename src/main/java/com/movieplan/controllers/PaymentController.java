@@ -41,7 +41,7 @@ public class PaymentController {
 	
 	//PUT API
 	@PutMapping("/add")
-	public boolean addPayment(@RequestBody Payment payment) {
+	public Payment addPayment(@RequestBody Payment payment) {
 		return pservice.addPayment(payment);
 	}
 	

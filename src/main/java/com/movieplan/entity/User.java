@@ -8,7 +8,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_table")
 public class User {
 
 	@Id
